@@ -24,26 +24,46 @@ allBoxes.forEach( function(item){
         }
     })
 })
+
+var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker
+    allBoxes[num1].style.backgroundColor = 'green';
+    allBoxes[num2].style.backgroundColor = 'green';
+    allBoxes[num3].style.backgroundColor = 'green';
+    document.querySelector('body h3').textContent = 'Winner is '+str+'!!!';
+
+}
 addEventListener('click',function(){
-    if((allBoxes[0].textContent === allBoxes[1].textContent && allBoxes[1].textContent === allBoxes[2].textContent && allBoxes[0].textContent === 'X') ||
-    (allBoxes[3].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[5].textContent && allBoxes[5].textContent === 'X') ||
-    (allBoxes[6].textContent === allBoxes[7].textContent && allBoxes[7].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'X') ||
-    (allBoxes[0].textContent === allBoxes[3].textContent && allBoxes[3].textContent === allBoxes[6].textContent && allBoxes[6].textContent === 'X') ||
-    (allBoxes[1].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[7].textContent && allBoxes[7].textContent === 'X') ||
-    (allBoxes[2].textContent === allBoxes[5].textContent && allBoxes[5].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'X') ||
-    (allBoxes[0].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'X') ||
-    (allBoxes[2].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[6].textContent && allBoxes[6].textContent === 'X')
-    ){
-        document.querySelector('body h3').textContent = 'Winner is X!!!';
-    }else if((allBoxes[0].textContent === allBoxes[1].textContent && allBoxes[1].textContent === allBoxes[2].textContent && allBoxes[0].textContent === 'O') ||
-    (allBoxes[3].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[5].textContent && allBoxes[5].textContent === 'O') ||
-    (allBoxes[6].textContent === allBoxes[7].textContent && allBoxes[7].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'O') ||
-    (allBoxes[0].textContent === allBoxes[3].textContent && allBoxes[3].textContent === allBoxes[6].textContent && allBoxes[6].textContent === 'O') ||
-    (allBoxes[1].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[7].textContent && allBoxes[7].textContent === 'O') ||
-    (allBoxes[2].textContent === allBoxes[5].textContent && allBoxes[5].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'O') ||
-    (allBoxes[0].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[8].textContent && allBoxes[8].textContent === 'O') ||
-    (allBoxes[2].textContent === allBoxes[4].textContent && allBoxes[4].textContent === allBoxes[6].textContent && allBoxes[6].textContent === 'O')
-    ){
-        document.querySelector('body h3').textContent = 'Winner is O!!!';
+    if(allBoxes[0].textContent === allBoxes[1].textContent && 
+        allBoxes[1].textContent === allBoxes[2].textContent && 
+        allBoxes[0].textContent !== ''){
+        winner(0,1,2,allBoxes[0].textContent);
+    }else if((allBoxes[3].textContent === allBoxes[4].textContent && 
+        allBoxes[4].textContent === allBoxes[5].textContent && 
+        allBoxes[5].textContent !== '')){
+            winner(3,4,5,allBoxes[3].textContent);
+    }else if((allBoxes[6].textContent === allBoxes[7].textContent && 
+        allBoxes[7].textContent === allBoxes[8].textContent && 
+        allBoxes[8].textContent !== '')){
+            winner(6,7,8,allBoxes[6].textContent);
+    }else if((allBoxes[0].textContent === allBoxes[3].textContent && 
+        allBoxes[3].textContent === allBoxes[6].textContent && 
+        allBoxes[6].textContent !== '')){
+            winner(0,3,6,allBoxes[3].textContent);
+    }else if((allBoxes[1].textContent === allBoxes[4].textContent && 
+        allBoxes[4].textContent === allBoxes[7].textContent && 
+        allBoxes[7].textContent !== '')){
+            winner(1,4,7,allBoxes[7].textContent);
+    }else if((allBoxes[2].textContent === allBoxes[5].textContent && 
+        allBoxes[5].textContent === allBoxes[8].textContent && 
+        allBoxes[8].textContent !== '')){
+            winner(2,5,8,allBoxes[5].textContent);
+    }else if((allBoxes[0].textContent === allBoxes[4].textContent && 
+        allBoxes[4].textContent === allBoxes[8].textContent && 
+        allBoxes[8].textContent !== '')){
+            winner(0,4,8,allBoxes[8].textContent);
+    }else if((allBoxes[2].textContent === allBoxes[4].textContent && 
+        allBoxes[4].textContent === allBoxes[6].textContent && 
+        allBoxes[6].textContent !== '')){
+            winner(2,4,6,allBoxes[6].textContent);
     }
 })
