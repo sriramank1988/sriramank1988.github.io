@@ -6,14 +6,14 @@ allBoxes.forEach( function(item){
         if(event.target.textContent === "" && document.querySelector('body h3 span').textContent != null){ //Ensure Text content is Empty and winner not found
             if(playerTurn === 'X'){
                 event.target.textContent = playerTurn;
-                event.target.style.backgroundColor = 'yellow';
+                event.target.style.backgroundColor = 'mistyrose';
                 playerTurn = 'O';
                 document.querySelector('body h3 span').textContent = 'O';
                 counter++;
             }
             else{
                 event.target.textContent = playerTurn;
-                event.target.style.backgroundColor = 'yellow';
+                event.target.style.backgroundColor = 'mistyrose';
                 playerTurn = 'X';
                 document.querySelector('body h3 span').textContent = 'X';
                 counter++;
