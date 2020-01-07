@@ -6,13 +6,20 @@ allBoxes.forEach( function(item){
         if(event.target.textContent === "" && document.querySelector('body h3 span').textContent != null){ //Ensure Text content is Empty and winner not found
             if(playerTurn === 'X'){
                 event.target.textContent = playerTurn;
+                event.target.style.backgroundColor = 'yellow';
                 playerTurn = 'O';
-                document.querySelector('body h3 span').textContent = 'O'
+                document.querySelector('body h3 span').textContent = 'O';
+                counter++;
             }
             else{
                 event.target.textContent = playerTurn;
+                event.target.style.backgroundColor = 'yellow';
                 playerTurn = 'X';
                 document.querySelector('body h3 span').textContent = 'X';
+                counter++;
+            }
+            if(counter === 9){
+                document.querySelector('body h3').textContent = 'Its a Tie mate!!!';
             }
         }
     })
