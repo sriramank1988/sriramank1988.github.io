@@ -17,3 +17,9 @@ h3{
     width: 300px;
     text-align: center;
 }
+p{
+    text-align: justify;
+}
+.winMessage{
+    display: none;
+}
