@@ -9,26 +9,43 @@
 </head>
 <body>
     <h1>TIC - TAC - TOE</h1>
-    <p>You probably already know how to play Tic-Tac-Toe. It's a really simple game, right? That's what most people think. But if you really wrap your brain around it, you'll discover that Tic-Tac-Toe isn't quite as simple as you think!</p>
-    <div class="main">
+    <div class="startScreen">
+        <p>You probably already know how to play Tic-Tac-Toe. It's a really simple game, right? That's what most people think. But if you really wrap your brain around it, you'll discover that Tic-Tac-Toe isn't quite as simple as you think!</p>
+        <h3>Ready to play??</h3>
+        <h2 class="option youvsme">You Vs Computer (Hard)</h2>
+        <h2 class="option youvsnoob">You vs Computer (Easy)</h2>
+        <h2 class="option twoPlayers">You vs Human (It Depends!)</h2>
+    </div>
+    <div class="game">
+        <div class="flex-wrap">
+            <div>Score</div>
+            <div class="xScore"> Player X - <span>0</span>
+            </div>
+            <div class="oScore"> Player O - <span>0</span>
+            </div>
+        </div>
+
         <div class="rows">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
+            <div class="box" data-row = "1" data-col= "1"></div>
+            <div class="box" data-row = "1" data-col= "2"></div>
+            <div class="box" data-row = "1" data-col= "3"></div>
         </div>
         <div class="rows">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
+            <div class="box" data-row = "2" data-col= "1"></div>
+            <div class="box" data-row = "2" data-col= "2"></div>
+            <div class="box" data-row = "2" data-col= "3"></div>
         </div>
         <div class="rows">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div> 
+            <div class="box" data-row = "3" data-col= "1"></div>
+            <div class="box" data-row = "3" data-col= "2"></div>
+            <div class="box" data-row = "3" data-col= "3"></div> 
         </div>
         <h3 class = "palyerTurn">Player <span>X</span>'s Turn</h3>
         <h3 class = "winMessage"></h3>
-        <button class="resetBtn">Restart the Game</button>
+        <div class="flex-wrap">
+            <button class="resetBtn">Restart the Game</button>
+            <button class="goHomeBtn">Return to Home</button>
+        </div>
     </div>
 </body>
 <script src="script.js"></script>
