@@ -3,16 +3,17 @@ var playerTurnDom = document.querySelector('.playerTurn')
 var winMessage = document.querySelector('.winMessage')
 var resetBtn = document.querySelector('.resetBtn');
 var goHomeBtn = document.querySelector('.goHomeBtn');
-var scoreX = 0, scoreO = 0, counter = 0, easyCount = 0;
 var allBoxes = document.querySelectorAll('.box');
 var twoPlayer = document.querySelector('.twoPlayers');
 var easyMode = document.querySelector('.youvsnoob');
 var difficultMode = document.querySelector('.youvsme');
 var startScreen = document.querySelector('.startScreen');
 var gameDom = document.querySelector('.game');
+var compMsg = document.querySelector('.compMsg');
 var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
 var availBoxToStr = availableBox.toString();
 var timerId = null;
+var scoreX = 0, scoreO = 0, counter = 0, easyCount = 0;
 var winCombos = [[0,1,2],[3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
 
 var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker and prints it to user
@@ -117,7 +118,9 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
         document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
         availableBox[randCol][randRow] = 'O';
         //console.log(easyCount);
-        document.querySelector('body h3 span').textContent = 'X';
+       // document.querySelector('body h3 span').textContent = 'X';
+        playerTurnDom.style.display = 'block';
+        compMsg.style.display = 'none';
         checkWin();
 
     }else{
@@ -135,7 +138,9 @@ var playerMoves = function(event){
                 event.target.textContent = playerTurn;
                 event.target.style.backgroundColor = 'mistyrose';
                 easyCount++;
-                document.querySelector('body h3 span').textContent = 'O';
+                playerTurnDom.style.display = 'none';
+                
+
                 
 }
 var loadEasyMode = function(){
@@ -144,8 +149,10 @@ var loadEasyMode = function(){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
                 checkWin();
-                if(playerTurnDom.style.display != 'none'){
-                    timerId = setTimeout(pickEasy, easyCount*1000);                    
+                compMsg.style.display = 'block';
+                if(winMessage.style.display != 'block'){
+                    timerId = setTimeout(pickEasy, easyCount*1000);     
+               
                 }
             }
         })
