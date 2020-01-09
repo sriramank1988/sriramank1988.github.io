@@ -132,12 +132,11 @@ var loadEasyMode = function(){
                 availableBox[row][col] = 0;
                 event.target.textContent = playerTurn;
                 event.target.style.backgroundColor = 'mistyrose';
+                easyCount++;
                 document.querySelector('body h3 span').textContent = 'O';
                 checkWin();
                 if(playerTurnDom.style.display != 'none'){
                     timerId = setTimeout(pickEasy, easyCount*1000);                    
-                    easyCount++;
-
                 }
             }
         })
