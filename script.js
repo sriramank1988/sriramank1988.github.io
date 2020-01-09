@@ -1,5 +1,5 @@
 var playerTurn = document.querySelector('body h3 span').textContent;
-var playerTurnDom = document.querySelector('.palyerTurn')
+var playerTurnDom = document.querySelector('.playerTurn')
 var winMessage = document.querySelector('.winMessage')
 var resetBtn = document.querySelector('.resetBtn');
 var goHomeBtn = document.querySelector('.goHomeBtn');
@@ -11,7 +11,7 @@ var difficultMode = document.querySelector('.youvsme');
 var startScreen = document.querySelector('.startScreen');
 var gameDom = document.querySelector('.game');
 var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
-
+var timerId = null;
 
 var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker
     allBoxes[num1].style.backgroundColor = 'green';
@@ -34,8 +34,7 @@ var isWinningCombo = function(num1,num2,num3){ //checks a winning combo is found
     
     return (allBoxes[num1].textContent === allBoxes[num2].textContent && 
         allBoxes[num2].textContent === allBoxes[num3].textContent && 
-        allBoxes[num3].textContent !== '')
-        
+        allBoxes[num3].textContent !== '')        
 }
 var checkWin = function(){  
     if(isWinningCombo(0,1,2)){
@@ -54,7 +53,7 @@ var checkWin = function(){
             winner(0,4,8,allBoxes[8].textContent);
     }else if(isWinningCombo(2,4,6)){
             winner(2,4,6,allBoxes[6].textContent);
-    }else if(counter === 9 || easyCount === 5){
+    }else if(counter === 9 || easyCount  === 5){
         winMessage.textContent = 'Its a Tie mate!!!';
         winMessage.style.display = 'block';
         playerTurnDom.style.display = 'none';
@@ -77,7 +76,6 @@ resetBtn.addEventListener('click',function(){
 goHomeBtn.addEventListener('click',function(){
     location.reload();
 })
-
 var loadTwoPlayer = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
@@ -110,35 +108,37 @@ var pickEasy = function(){
 var randRow = Math.floor(Math.random()*availableBox.length);
 var randCol = Math.floor(Math.random()*availableBox.length);
 if(availableBox[randCol][randRow] == "1"){
-    console.log("Rand data " + randCol + " " + randRow)
     document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
     document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
     availableBox[randCol][randRow] = 0;
-    console.log(availableBox)
+    console.log(easyCount);
+    document.querySelector('body h3 span').textContent = 'X';
+    checkWin();
+
 }else{
-    if(easyCount < 4){
+    if(easyCount < 5){
     pickEasy();
     }
 }
+clearInterval = timerId;
+timerId = null;
 }
 var loadEasyMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
-            if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
+            if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
                 var col = Number(event.target.getAttribute('data-col'));
                 var row = Number(event.target.getAttribute('data-row'));
                 availableBox[row][col] = 0;
                 event.target.textContent = playerTurn;
                 event.target.style.backgroundColor = 'mistyrose';
-                if(easyCount < 5){
-                    checkWin();
-                    pickEasy();
-                }
-                easyCount++;
+                document.querySelector('body h3 span').textContent = 'O';
                 checkWin();
-                console.log(easyCount);
-                            
+                if(playerTurnDom.style.display != 'none'){
+                    timerId = setTimeout(pickEasy, easyCount*1000);                    
+                    easyCount++;
 
+                }
             }
         })
     })
@@ -148,9 +148,31 @@ easyMode.addEventListener('click',function(event){
     gameDom.style.display = 'block';
     loadEasyMode();
 })
+var canIWin = function(){
+
+    return false;
+}
 var loadDifficultMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
+            if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
+                var col = Number(event.target.getAttribute('data-col'));
+                var row = Number(event.target.getAttribute('data-row'));
+                availableBox[row][col] = 0;
+                event.target.textContent = playerTurn;
+                event.target.style.backgroundColor = 'mistyrose';
+                checkWin();
+                if(playerTurnDom.style.display != 'none'){
+
+                    if(canIWin()){
+
+                    }else{
+                        pickEasy();
+                    }
+                    easyCount++;
+                    checkWin();
+                }
+            }
         })
     })
 }
