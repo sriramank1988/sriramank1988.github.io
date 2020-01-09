@@ -42,6 +42,19 @@ h2:active {
 }
 .flex-wrap{
     display:flex;
+    height: 40px;
     justify-content: space-evenly;   
 
+}
+.footerBtn{
+    width: 90px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #c7cfd3;
+}
+.startScreen{
+    
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
 }

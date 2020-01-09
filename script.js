@@ -11,9 +11,11 @@ var difficultMode = document.querySelector('.youvsme');
 var startScreen = document.querySelector('.startScreen');
 var gameDom = document.querySelector('.game');
 var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
+var availBoxToStr = availableBox.toString();
 var timerId = null;
+var winCombos = [[0,1,2],[3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
 
-var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker
+var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker and prints it to user
     allBoxes[num1].style.backgroundColor = 'green';
     allBoxes[num2].style.backgroundColor = 'green';
     allBoxes[num3].style.backgroundColor = 'green';
@@ -30,13 +32,13 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
         }
     }
 }
-var isWinningCombo = function(num1,num2,num3){ //checks a winning combo is found and returns a boolean
+var isWinningCombo = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean
     
     return (allBoxes[num1].textContent === allBoxes[num2].textContent && 
         allBoxes[num2].textContent === allBoxes[num3].textContent && 
         allBoxes[num3].textContent !== '')        
 }
-var checkWin = function(){  
+var checkWin = function(){  //in the web dom checks if any player marker are placed in winning position
     if(isWinningCombo(0,1,2)){
         winner(0,1,2,allBoxes[0].textContent);
     }else if(isWinningCombo(3,4,5)){
@@ -60,7 +62,7 @@ var checkWin = function(){
         counter = 0;
     }
 }
-resetBtn.addEventListener('click',function(){
+resetBtn.addEventListener('click',function(){ // reset button event listener
     allBoxes.forEach(function(item){
             item.textContent = '';
             item.style.backgroundColor = 'white';
@@ -73,10 +75,11 @@ resetBtn.addEventListener('click',function(){
     availableBox = [[1,1,1],[1,1,1],[1,1,1]];
     easyCount = 0
 })
-goHomeBtn.addEventListener('click',function(){
+goHomeBtn.addEventListener('click',function(){ //Go home event listener button.
     location.reload();
 })
-var loadTwoPlayer = function(){
+// the basic part
+var loadTwoPlayer = function(){ //man vs man code, no logic involved, just change dom accordingly.
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
@@ -99,41 +102,47 @@ var loadTwoPlayer = function(){
         })
     })
 }
-twoPlayer.addEventListener('click',function(event){
+twoPlayer.addEventListener('click',function(event){//in home screen loads man vs man code and hides the splash screen
     startScreen.style.display = 'none';
     gameDom.style.display = 'block';
     loadTwoPlayer();
 })
-var pickEasy = function(){
-var randRow = Math.floor(Math.random()*availableBox.length);
-var randCol = Math.floor(Math.random()*availableBox.length);
-if(availableBox[randCol][randRow] == "1"){
-    document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
-    document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
-    availableBox[randCol][randRow] = 0;
-    console.log(easyCount);
-    document.querySelector('body h3 span').textContent = 'X';
-    checkWin();
 
-}else{
-    if(easyCount < 5){
-    pickEasy();
+// The easy part
+var pickEasy = function(){ //picks a random postion which is still avaiable and computer makes a move.
+    var randRow = Math.floor(Math.random()*availableBox.length);
+    var randCol = Math.floor(Math.random()*availableBox.length);
+    if(availableBox[randCol][randRow] == "1"){
+        document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
+        document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
+        availableBox[randCol][randRow] = 'O';
+        //console.log(easyCount);
+        document.querySelector('body h3 span').textContent = 'X';
+        checkWin();
+
+    }else{
+        if(easyCount < 5){
+        pickEasy();
     }
 }
 clearInterval = timerId;
 timerId = null;
 }
-var loadEasyMode = function(){
-    allBoxes.forEach(function(item){
-        item.addEventListener('click',function(event){
-            if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
-                var col = Number(event.target.getAttribute('data-col'));
+var playerMoves = function(event){
+    var col = Number(event.target.getAttribute('data-col'));
                 var row = Number(event.target.getAttribute('data-row'));
-                availableBox[row][col] = 0;
+                availableBox[row][col] = 'X';
                 event.target.textContent = playerTurn;
                 event.target.style.backgroundColor = 'mistyrose';
                 easyCount++;
                 document.querySelector('body h3 span').textContent = 'O';
+                
+}
+var loadEasyMode = function(){
+    allBoxes.forEach(function(item){
+        item.addEventListener('click',function(event){
+            if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
+                playerMoves(event);
                 checkWin();
                 if(playerTurnDom.style.display != 'none'){
                     timerId = setTimeout(pickEasy, easyCount*1000);                    
@@ -147,7 +156,45 @@ easyMode.addEventListener('click',function(event){
     gameDom.style.display = 'block';
     loadEasyMode();
 })
-var canIWin = function(){
+// The hard part - Work in progress
+var isWinPossible = function(char){
+    availBoxToStr = availableBox.toString().split(",");
+    var filled = [];
+    for(var i = 0; i < availBoxToStr.length; i++){
+        if(availBoxToStr[i] === char){
+            filled.push(i);
+        }
+    }
+    var storage = [];
+    for(var i = 0; i < filled.length; i++){
+        for (var j = 0; j < 8; j++) {
+            for (k = 0; k < 3 ; k++){
+                if(filled[i] == winCombos[j][k]){
+                    storage.push(j);
+                }
+            }
+        }
+    }
+    console.log("Combo " + storage)
+    // for(var i = 0; i < storage.length; i++ ){
+    //     console
+    // }
+    var availIndexArray = [];
+    console.log("Filled " + filled)
+    for(var i = 0; i < storage.length; i++){
+        for(j = i+1; j< storage.length; j++){
+            if(storage[i] === storage[j]){
+                console.log("Better pick : " + winCombos[storage[j]]);
+                console.log("Space Available : " + availBoxToStr);
+                for( var i = 0; i < availBoxToStr.length; i++){
+                    if(availBoxToStr[i] == "1"){
+                        availIndexArray.push(i);
+                    }   
+                } 
+            }
+        }
+    }
+    console.log("avail index " + availIndexArray);
 
     return false;
 }
@@ -155,20 +202,14 @@ var loadDifficultMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
-                var col = Number(event.target.getAttribute('data-col'));
-                var row = Number(event.target.getAttribute('data-row'));
-                availableBox[row][col] = 0;
-                event.target.textContent = playerTurn;
-                event.target.style.backgroundColor = 'mistyrose';
+                playerMoves(event);
                 checkWin();
                 if(playerTurnDom.style.display != 'none'){
-
-                    if(canIWin()){
-
-                    }else{
-                        pickEasy();
-                    }
-                    easyCount++;
+                    pickEasy();
+                    isWinPossible('O');
+                    console.log("Easy count : " + easyCount);
+                    availBoxToStr = availableBox.toString().split(",");
+                    console.log(availBoxToStr);
                     checkWin();
                 }
             }
