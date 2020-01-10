@@ -42,6 +42,7 @@ Work in Progess :
 
 1. Better response functionality is still in progress but doesnot break the functionality of the game because of using a fallback by calling the random pick functionality.
 
+-----------------------------------------------------
 4. Lessons :
 
 1. Unable to think of abstraction immediately. developed functions only after seeing the set of codes were repeated again.
