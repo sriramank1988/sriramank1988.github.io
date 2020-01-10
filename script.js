@@ -27,6 +27,7 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
     winMessage.style.display = 'block';
     playerTurnDom.style.display = 'none';
     compMsg.style.display = 'none';
+    document.querySelector('button').disabled = false;
     if(playerTurnDom.style.display == 'none'){
         if(str === 'X'){
             scoreX++;
@@ -64,7 +65,7 @@ var checkWin = function(){  //in the web dom checks if any player marker are pla
         winMessage.style.display = 'block';
         playerTurnDom.style.display = 'none';
         compMsg.style.display = 'none';
-
+        document.querySelector('button').disabled = false;
         counter = 0;
     }
 }
@@ -132,7 +133,7 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
 }
 clearInterval = timerId;
 timerId = null;
-document.querySelector('button').disabled = true;
+document.querySelector('button').disabled = false;
 }
 var playerMoves = function(event){
     var col = Number(event.target.getAttribute('data-col'));
