@@ -10,6 +10,7 @@ use https://sriramank1988.github.io/ to play my game. . . Enjoy!!!! Cheeerssss!!
 
 4. Challanges :
 
+5. Lessons :
 
 1. Intro :
 
@@ -42,7 +43,7 @@ Work in Progess :
 
 1. Better response functionality is still in progress but doesnot break the functionality of the game because of using a fallback by calling the random pick functionality.
 
-4. Lessons :
+5. Lessons :
 
 1. Unable to think of abstraction immediately. developed functions only after seeing the set of codes were repeated again.
-2. keeping fallback condition is a idea to ensure the program doen't break.
+2. keeping fallback condition is a good idea to ensure the program doen't break.
