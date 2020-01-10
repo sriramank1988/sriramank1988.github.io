@@ -14,7 +14,10 @@ var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
 var availBoxToStr = availableBox.toString();
 var timerId = null;
 var scoreX = 0, scoreO = 0, counter = 0, easyCount = 0;
-var winCombos = [[0,1,2],[3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
+var winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+var avaiableWinCombos = winCombos;
+var oFilled = [];
+var xFilled = [];
 
 var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker and prints it to user
     allBoxes[num1].style.backgroundColor = 'green';
@@ -23,6 +26,7 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
     winMessage.textContent = 'Winner is '+str+'!!!';
     winMessage.style.display = 'block';
     playerTurnDom.style.display = 'none';
+    compMsg.style.display = 'none';
     if(playerTurnDom.style.display == 'none'){
         if(str === 'X'){
             scoreX++;
@@ -33,8 +37,7 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
         }
     }
 }
-var isWinningCombo = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean
-    
+var isWinningCombo = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean    
     return (allBoxes[num1].textContent === allBoxes[num2].textContent && 
         allBoxes[num2].textContent === allBoxes[num3].textContent && 
         allBoxes[num3].textContent !== '')        
@@ -60,13 +63,15 @@ var checkWin = function(){  //in the web dom checks if any player marker are pla
         winMessage.textContent = 'Its a Tie mate!!!';
         winMessage.style.display = 'block';
         playerTurnDom.style.display = 'none';
+        compMsg.style.display = 'none';
+
         counter = 0;
     }
 }
 resetBtn.addEventListener('click',function(){ // reset button event listener
     allBoxes.forEach(function(item){
             item.textContent = '';
-            item.style.backgroundColor = 'white';
+            item.style.backgroundColor = '# bbd0e5';
     })
     playerTurnDom.style.display = 'block';
     winMessage.style.display = 'none';
@@ -74,7 +79,7 @@ resetBtn.addEventListener('click',function(){ // reset button event listener
     playerTurn = 'X';
     document.querySelector('body h3 span').textContent = 'X';
     availableBox = [[1,1,1],[1,1,1],[1,1,1]];
-    easyCount = 0
+    easyCount = 0;
 })
 goHomeBtn.addEventListener('click',function(){ //Go home event listener button.
     location.reload();
@@ -117,12 +122,9 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
         document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
         document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
         availableBox[randCol][randRow] = 'O';
-        //console.log(easyCount);
-       // document.querySelector('body h3 span').textContent = 'X';
         playerTurnDom.style.display = 'block';
         compMsg.style.display = 'none';
         checkWin();
-
     }else{
         if(easyCount < 5){
         pickEasy();
@@ -133,15 +135,13 @@ timerId = null;
 }
 var playerMoves = function(event){
     var col = Number(event.target.getAttribute('data-col'));
-                var row = Number(event.target.getAttribute('data-row'));
-                availableBox[row][col] = 'X';
-                event.target.textContent = playerTurn;
-                event.target.style.backgroundColor = 'mistyrose';
-                easyCount++;
-                playerTurnDom.style.display = 'none';
-                
-
-                
+    var row = Number(event.target.getAttribute('data-row'));
+    availableBox[row][col] = 'X';
+    event.target.textContent = playerTurn;
+    event.target.style.backgroundColor = 'mistyrose';
+    easyCount++;
+    playerTurnDom.style.display = 'none';
+    compMsg.style.display = 'block';                                
 }
 var loadEasyMode = function(){
     allBoxes.forEach(function(item){
@@ -149,10 +149,8 @@ var loadEasyMode = function(){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
                 checkWin();
-                compMsg.style.display = 'block';
                 if(winMessage.style.display != 'block'){
-                    timerId = setTimeout(pickEasy, easyCount*1000);     
-               
+                    timerId = setTimeout(pickEasy, easyCount*1000);                    
                 }
             }
         })
@@ -164,46 +162,26 @@ easyMode.addEventListener('click',function(event){
     loadEasyMode();
 })
 // The hard part - Work in progress
-var isWinPossible = function(char){
+var storage = [];
+var availIndexArray = [];
+var fillFunc = function(){
+    oFilled = [];
+    xFilled = [];
     availBoxToStr = availableBox.toString().split(",");
-    var filled = [];
-    for(var i = 0; i < availBoxToStr.length; i++){
-        if(availBoxToStr[i] === char){
-            filled.push(i);
+    for(var i = 0; i < availBoxToStr.length; i++){ //fills all the position filled
+        if(availBoxToStr[i] === "X"){
+            xFilled.push(i);
+        }
+        if(availBoxToStr[i] === 'O'){
+            oFilled.push(i);
         }
     }
-    var storage = [];
-    for(var i = 0; i < filled.length; i++){
-        for (var j = 0; j < 8; j++) {
-            for (k = 0; k < 3 ; k++){
-                if(filled[i] == winCombos[j][k]){
-                    storage.push(j);
-                }
-            }
-        }
-    }
-    console.log("Combo " + storage)
-    // for(var i = 0; i < storage.length; i++ ){
-    //     console
-    // }
-    var availIndexArray = [];
-    console.log("Filled " + filled)
-    for(var i = 0; i < storage.length; i++){
-        for(j = i+1; j< storage.length; j++){
-            if(storage[i] === storage[j]){
-                console.log("Better pick : " + winCombos[storage[j]]);
-                console.log("Space Available : " + availBoxToStr);
-                for( var i = 0; i < availBoxToStr.length; i++){
-                    if(availBoxToStr[i] == "1"){
-                        availIndexArray.push(i);
-                    }   
-                } 
-            }
-        }
-    }
-    console.log("avail index " + availIndexArray);
-
-    return false;
+    console.log("XFilled : " + xFilled)
+    console.log("OFilled : " + oFilled)
+}
+var canOWin = function(){
+    console.log("Owin called")
+    var counter = 0 ;    
 }
 var loadDifficultMode = function(){
     allBoxes.forEach(function(item){
@@ -211,14 +189,14 @@ var loadDifficultMode = function(){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
                 checkWin();
-                if(playerTurnDom.style.display != 'none'){
-                    pickEasy();
-                    isWinPossible('O');
+                canOWin();
+                if(winMessage.style.display != 'block'){
+                    pickEasy();                    
                     console.log("Easy count : " + easyCount);
                     availBoxToStr = availableBox.toString().split(",");
                     console.log(availBoxToStr);
-                    checkWin();
                 }
+                fillFunc();
             }
         })
     })
@@ -228,3 +206,43 @@ difficultMode.addEventListener('click',function(event){
     gameDom.style.display = 'block';
     loadDifficultMode();
 })
+
+
+
+
+// findAvailWinCombo = function(){
+//     fillFunc();
+//     for(var i = 0; i < filled.length; i++){
+//             for (k = 0; k < 3 ; k++){
+//                 if(filled[i] == avaiableWinCombos[j][k]){
+//                     storage.push(j);
+//                 }
+//             }
+//         }
+//     }
+//     console.log(" J value :" + storage);
+
+//     console.log("Avail win combo" + avaiableWinCombos);
+//}
+//var isWinPossible = function(char){    
+
+    // console.log("Combo " + storage)
+    // for(var i = 0; i < storage.length; i++ ){
+    //     console
+    // }
+    // for(var i = 0; i < storage.length; i++){
+    //     for(j = i+1; j< storage.length; j++){
+    //         if(storage[i] === storage[j]){
+    //             console.log("Better pick : " + winCombos[storage[j]]);
+    //             console.log("Space Available : " + availBoxToStr);
+    //             for( var i = 0; i < availBoxToStr.length; i++){
+    //                 if(availBoxToStr[i] == "1"){
+    //                     availIndexArray.push(i);
+    //                 }   
+    //             } 
+    //         }
+    //     }
+    // }
+    // console.log("avail index " + availIndexArray);
+  //  return false;
+//}

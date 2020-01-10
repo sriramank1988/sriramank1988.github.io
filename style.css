@@ -53,5 +53,8 @@ h2:active {
     width: 90px;
     height: 40px;
     border-radius: 10px;
-    background-color: #c7cfd3;
+    background-color: #e27d5e;
+}
+body{
+    background-color: #bbd0e5;
 }
