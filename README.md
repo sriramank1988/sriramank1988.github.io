@@ -6,11 +6,9 @@ use https://sriramank1988.github.io/ to play my game. . . Enjoy!!!! Cheeerssss!!
 
 2. DEVELOPMENT :
 
-3. Problems :
+3. Challenges :
 
-4. Challanges :
-
-5. Lessons :
+4. Lessons :
 
 ----------------------------------------------------------------------------------------------------
 1. Intro :
@@ -33,7 +31,7 @@ day 2 : added score for each round, reset and return to home screen options. als
 day 3 : started to develop a better response for player move and it is still a Work in progress.
 day 4 : little house keeping to make sure everything works fine for all posible inputs and some color changes.
 
-Problems :
+3. Challenges :
 
 Fixed :
 
@@ -44,7 +42,7 @@ Work in Progess :
 
 1. Better response functionality is still in progress but doesnot break the functionality of the game because of using a fallback by calling the random pick functionality.
 
-5. Lessons :
+4. Lessons :
 
 1. Unable to think of abstraction immediately. developed functions only after seeing the set of codes were repeated again.
 2. keeping fallback condition is a good idea to ensure the program doen't break.
