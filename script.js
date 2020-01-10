@@ -71,7 +71,7 @@ var checkWin = function(){  //in the web dom checks if any player marker are pla
 resetBtn.addEventListener('click',function(){ // reset button event listener
     allBoxes.forEach(function(item){
             item.textContent = '';
-            item.style.backgroundColor = '# bbd0e5';
+            item.style.backgroundColor = '#bbd0e5';
     })
     playerTurnDom.style.display = 'block';
     winMessage.style.display = 'none';
@@ -132,6 +132,7 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
 }
 clearInterval = timerId;
 timerId = null;
+document.querySelector('button').disabled = true;
 }
 var playerMoves = function(event){
     var col = Number(event.target.getAttribute('data-col'));
@@ -141,7 +142,9 @@ var playerMoves = function(event){
     event.target.style.backgroundColor = 'mistyrose';
     easyCount++;
     playerTurnDom.style.display = 'none';
-    compMsg.style.display = 'block';                                
+    compMsg.style.display = 'block';
+    document.querySelector('button').disabled = true;
+                                
 }
 var loadEasyMode = function(){
     allBoxes.forEach(function(item){
