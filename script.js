@@ -184,9 +184,9 @@ var fillFunc = function(){
     console.log("OFilled : " + oFilled)
 }
 var canOWin = function(){
-    console.log("Owin called")
-    for(var i = 0; i <)
-    var counter = 0 ;    
+    // console.log("Owin called")
+    // for(var i = 0; i <)
+    // var counter = 0 ;    
 }
 var loadDifficultMode = function(){
     allBoxes.forEach(function(item){

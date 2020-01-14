@@ -46,4 +46,4 @@ Work in Progess :
 4. Lessons :
 
     1. Unable to think of abstraction immediately. developed functions only after seeing the set of codes were repeated again.
-    2. keeping fallback condition is a good idea to ensure the program doen't break.
+    2. keeping fallback condition is a good idea to ensure the program doesn't break.
