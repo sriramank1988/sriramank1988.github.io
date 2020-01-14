@@ -38,27 +38,27 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
         }
     }
 }
-var isWinningCombo = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean    
+var isSame = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean    
     return (allBoxes[num1].textContent === allBoxes[num2].textContent && 
         allBoxes[num2].textContent === allBoxes[num3].textContent && 
         allBoxes[num3].textContent !== '')        
 }
 var checkWin = function(){  //in the web dom checks if any player marker are placed in winning position
-    if(isWinningCombo(0,1,2)){
+    if(isSame(0,1,2)){
         winner(0,1,2,allBoxes[0].textContent);
-    }else if(isWinningCombo(3,4,5)){
+    }else if(isSame(3,4,5)){
             winner(3,4,5,allBoxes[3].textContent);
-    }else if(isWinningCombo(6,7,8)){
+    }else if(isSame(6,7,8)){
             winner(6,7,8,allBoxes[6].textContent);
-    }else if(isWinningCombo(0,3,6)){
+    }else if(isSame(0,3,6)){
             winner(0,3,6,allBoxes[3].textContent);
-    }else if(isWinningCombo(1,4,7)){
+    }else if(isSame(1,4,7)){
             winner(1,4,7,allBoxes[7].textContent);
-    }else if(isWinningCombo(2,5,8)){
+    }else if(isSame(2,5,8)){
             winner(2,5,8,allBoxes[5].textContent);
-    }else if(isWinningCombo(0,4,8)){
+    }else if(isSame(0,4,8)){
             winner(0,4,8,allBoxes[8].textContent);
-    }else if(isWinningCombo(2,4,6)){
+    }else if(isSame(2,4,6)){
             winner(2,4,6,allBoxes[6].textContent);
     }else if(counter === 9 || easyCount  === 5){
         winMessage.textContent = 'Its a Tie mate!!!';
@@ -185,6 +185,7 @@ var fillFunc = function(){
 }
 var canOWin = function(){
     console.log("Owin called")
+    for(var i = 0; i <)
     var counter = 0 ;    
 }
 var loadDifficultMode = function(){
