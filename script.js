@@ -19,17 +19,9 @@ var avaiableWinCombos = winCombos;
 var oFilled = [];
 var xFilled = [];
 
-var winner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker and prints it to user
-    allBoxes[num1].style.backgroundColor = 'green';
-    allBoxes[num2].style.backgroundColor = 'green';
-    allBoxes[num3].style.backgroundColor = 'green';
-    winMessage.textContent = 'Winner is '+str+'!!!';
-    winMessage.style.display = 'block';
-    playerTurnDom.style.display = 'none';
-    compMsg.style.display = 'none';
-    document.querySelector('button').disabled = false;
+var updateScore = function(winningPlayerMarker){
     if(playerTurnDom.style.display == 'none'){
-        if(str === 'X'){
+        if(winningPlayerMarker === 'X'){
             scoreX++;
             document.querySelector('.xScore span').textContent = scoreX;
         }else{
@@ -38,28 +30,40 @@ var winner = function(num1,num2,num3,str){ //It expects the winning positions an
         }
     }
 }
+
+var displayWinner = function(num1,num2,num3,str){ //It expects the winning positions and the player marker and prints it to user
+    allBoxes[num1].style.backgroundColor = 'green';
+    allBoxes[num2].style.backgroundColor = 'green';
+    allBoxes[num3].style.backgroundColor = 'green';
+    winMessage.textContent = 'Winner is '+str+'!!!';
+    winMessage.style.display = 'block';
+    playerTurnDom.style.display = 'none';
+    compMsg.style.display = 'none';
+    document.querySelector('button').disabled = false;
+    updateScore(str)
+}
 var isSame = function(num1,num2,num3){ //checks a winning combo if found and returns a boolean    
     return (allBoxes[num1].textContent === allBoxes[num2].textContent && 
         allBoxes[num2].textContent === allBoxes[num3].textContent && 
         allBoxes[num3].textContent !== '')        
 }
-var checkWin = function(){  //in the web dom checks if any player marker are placed in winning position
+var checkWinAndDisplay = function(){  //in the web dom checks if any player marker are placed in winning position
     if(isSame(0,1,2)){
-        winner(0,1,2,allBoxes[0].textContent);
+        displayWinner(0,1,2,allBoxes[0].textContent);
     }else if(isSame(3,4,5)){
-            winner(3,4,5,allBoxes[3].textContent);
+            displayWinner(3,4,5,allBoxes[3].textContent);
     }else if(isSame(6,7,8)){
-            winner(6,7,8,allBoxes[6].textContent);
+            displayWinner(6,7,8,allBoxes[6].textContent);
     }else if(isSame(0,3,6)){
-            winner(0,3,6,allBoxes[3].textContent);
+            displayWinner(0,3,6,allBoxes[3].textContent);
     }else if(isSame(1,4,7)){
-            winner(1,4,7,allBoxes[7].textContent);
+            displayWinner(1,4,7,allBoxes[7].textContent);
     }else if(isSame(2,5,8)){
-            winner(2,5,8,allBoxes[5].textContent);
+            displayWinner(2,5,8,allBoxes[5].textContent);
     }else if(isSame(0,4,8)){
-            winner(0,4,8,allBoxes[8].textContent);
+            displayWinner(0,4,8,allBoxes[8].textContent);
     }else if(isSame(2,4,6)){
-            winner(2,4,6,allBoxes[6].textContent);
+            displayWinner(2,4,6,allBoxes[6].textContent);
     }else if(counter === 9 || easyCount  === 5){
         winMessage.textContent = 'Its a Tie mate!!!';
         winMessage.style.display = 'block';
@@ -69,22 +73,11 @@ var checkWin = function(){  //in the web dom checks if any player marker are pla
         counter = 0;
     }
 }
-resetBtn.addEventListener('click',function(){ // reset button event listener
-    allBoxes.forEach(function(item){
-            item.textContent = '';
-            item.style.backgroundColor = '#bbd0e5';
-    })
-    playerTurnDom.style.display = 'block';
-    winMessage.style.display = 'none';
-    counter = 0;
-    playerTurn = 'X';
-    document.querySelector('body h3 span').textContent = 'X';
-    availableBox = [[1,1,1],[1,1,1],[1,1,1]];
-    easyCount = 0;
-})
-goHomeBtn.addEventListener('click',function(){ //Go home event listener button.
-    location.reload();
-})
+
+var hideMenuAndLoadGameDom = function(){
+    startScreen.style.display = 'none';
+    gameDom.style.display = 'block';
+}
 // the basic part
 var loadTwoPlayer = function(){ //man vs man code, no logic involved, just change dom accordingly.
     allBoxes.forEach(function(item){
@@ -104,18 +97,13 @@ var loadTwoPlayer = function(){ //man vs man code, no logic involved, just chang
                     document.querySelector('body h3 span').textContent = 'X';
                     counter++;
                 }
-                checkWin();            
+                checkWinAndDisplay();            
             }
         })
     })
 }
-twoPlayer.addEventListener('click',function(event){//in home screen loads man vs man code and hides the splash screen
-    startScreen.style.display = 'none';
-    gameDom.style.display = 'block';
-    loadTwoPlayer();
-})
 
-// The easy part
+
 var pickEasy = function(){ //picks a random postion which is still avaiable and computer makes a move.
     var randRow = Math.floor(Math.random()*availableBox.length);
     var randCol = Math.floor(Math.random()*availableBox.length);
@@ -125,15 +113,15 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
         availableBox[randCol][randRow] = 'O';
         playerTurnDom.style.display = 'block';
         compMsg.style.display = 'none';
-        checkWin();
+        checkWinAndDisplay();
     }else{
         if(easyCount < 5){
         pickEasy();
+        }
     }
-}
-clearInterval = timerId;
-timerId = null;
-document.querySelector('button').disabled = false;
+    clearInterval = timerId;
+    timerId = null;
+    document.querySelector('button').disabled = false;
 }
 var playerMoves = function(event){
     var col = Number(event.target.getAttribute('data-col'));
@@ -152,7 +140,7 @@ var loadEasyMode = function(){
         item.addEventListener('click',function(event){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
-                checkWin();
+                checkWinAndDisplay();
                 if(winMessage.style.display != 'block'){
                     timerId = setTimeout(pickEasy, easyCount*1000);                    
                 }
@@ -160,11 +148,7 @@ var loadEasyMode = function(){
         })
     })
 }
-easyMode.addEventListener('click',function(event){
-    startScreen.style.display = 'none';
-    gameDom.style.display = 'block';
-    loadEasyMode();
-})
+
 // The hard part - Work in progress
 var storage = [];
 var availIndexArray = [];
@@ -183,7 +167,7 @@ var fillFunc = function(){
     console.log("XFilled : " + xFilled)
     console.log("OFilled : " + oFilled)
 }
-var canOWin = function(){
+var whoCanWin = function(){
     // console.log("Owin called")
     // for(var i = 0; i <)
     // var counter = 0 ;    
@@ -193,8 +177,8 @@ var loadDifficultMode = function(){
         item.addEventListener('click',function(event){
             if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
-                checkWin();
-                canOWin();
+                checkWinAndDisplay();
+                whoCanWin();
                 if(winMessage.style.display != 'block'){
                     pickEasy();                    
                     console.log("Easy count : " + easyCount);
@@ -206,13 +190,38 @@ var loadDifficultMode = function(){
         })
     })
 }
+
 difficultMode.addEventListener('click',function(event){
-    startScreen.style.display = 'none';
-    gameDom.style.display = 'block';
+    hideMenuAndLoadGameDom();
     loadDifficultMode();
 })
 
+easyMode.addEventListener('click',function(event){
+    hideMenuAndLoadGameDom();
+    loadEasyMode();
+})
 
+twoPlayer.addEventListener('click',function(event){//in home screen loads man vs man code and hides the splash screen
+    hideMenuAndLoadGameDom();
+    loadTwoPlayer();
+})
+
+resetBtn.addEventListener('click',function(){ // reset button event listener
+    allBoxes.forEach(function(item){
+            item.textContent = '';
+            item.style.backgroundColor = '#bbd0e5';
+    })
+    playerTurnDom.style.display = 'block';
+    winMessage.style.display = 'none';
+    counter = 0;
+    playerTurn = 'X';
+    document.querySelector('body h3 span').textContent = 'X';
+    availableBox = [[1,1,1],[1,1,1],[1,1,1]];
+    easyCount = 0;
+})
+goHomeBtn.addEventListener('click',function(){ //Go home event listener button.
+    location.reload();
+})
 
 
 // findAvailWinCombo = function(){
