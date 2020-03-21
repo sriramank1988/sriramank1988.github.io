@@ -10,12 +10,11 @@ var difficultMode = document.querySelector('.youvsme');
 var startScreen = document.querySelector('.startScreen');
 var gameDom = document.querySelector('.game');
 var compMsg = document.querySelector('.compMsg');
-var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
-var availBoxToStr = availableBox.toString();
+var availableBox = [1,1,1,1,1,1,1,1,1];
+var availableIndexPosition = [0,1,2,3,4,5,6,7,8];
 var timerId = null;
 var scoreX = 0, scoreO = 0, palyerMoveCounter = 0, computerMoveCounter = 0;
 var winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-var avaiableWinCombos = winCombos;
 var oFilled = [];
 var xFilled = [];
 
@@ -105,13 +104,14 @@ var loadTwoPlayer = function(){
     })
 }
 
-var pickEasy = function(){ 
-    var randRow = Math.floor(Math.random()*3);
-    var randCol = Math.floor(Math.random()*3);
-    if(availableBox[randCol][randRow] == "1"){
-        document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
-        document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
-        availableBox[randCol][randRow] = 'O';
+var pickEasy = function(){
+    var randIndex = Math.floor(Math.random()*9);
+    if(availableBox[randIndex] == "1"){
+        document.querySelector("[data-index=\""+ randIndex + "\"]").textContent = 'O';
+        document.querySelector("[data-index=\""+ randIndex + "\"]").style.backgroundColor = 'lightblue';
+        availableBox[randIndex] = "O";
+        oFilled.push(randIndex);
+        availableIndexPosition.splice(availableIndexPosition.indexOf(randIndex),1);
         turnInfoDOM.style.display = 'block';
         compMsg.style.display = 'none';
         checkWinAndDisplay();
@@ -126,9 +126,10 @@ var pickEasy = function(){
 }
 
 var playerMoves = function(event){
-    var col = Number(event.target.getAttribute('data-col'));
-    var row = Number(event.target.getAttribute('data-row'));
-    availableBox[row][col] = 'X';
+    var movedIndexPosition = Number(event.target.getAttribute('data-index'));
+    availableBox[movedIndexPosition] = 'X';
+    xFilled.push(movedIndexPosition);
+    availableIndexPosition.splice(availableIndexPosition.indexOf(movedIndexPosition),1);
     event.target.textContent = playerMarker;
     event.target.style.backgroundColor = 'mistyrose';
     computerMoveCounter++;
@@ -152,23 +153,7 @@ var loadEasyMode = function(){
     })
 }
 
-var storage = [];
-var availIndexArray = [];
-var fillFunc = function(){
-    oFilled = [];
-    xFilled = [];
-    availBoxToStr = availableBox.toString().split(",");
-    for(var i = 0; i < availBoxToStr.length; i++){ 
-        if(availBoxToStr[i] === "X"){
-            xFilled.push(i);
-        }
-        if(availBoxToStr[i] === 'O'){
-            oFilled.push(i);
-        }
-    }
-    console.log("XFilled : " + xFilled)
-    console.log("OFilled : " + oFilled)
-}
+
 var whoCanWin = function(){
       
 }
@@ -178,14 +163,16 @@ var loadDifficultMode = function(){
             if(event.target.textContent === "" && turnInfoDOM.style.display != 'none'){ 
                 playerMoves(event);
                 checkWinAndDisplay();
+                console.log("X filled : " + xFilled)
+                console.log("Avaialble spots " + availableBox)
+                console.log(availableIndexPosition)
                 whoCanWin();
                 if(winMessage.style.display != 'block'){
                     pickEasy();                    
-                    console.log("Easy count : " + computerMoveCounter);
-                    availBoxToStr = availableBox.toString().split(",");
-                    console.log(availBoxToStr);
+                    console.log("O filled : " + oFilled)
+                    console.log("Avaialble spots " + availableBox)
+                    console.log(availableIndexPosition)
                 }
-                fillFunc();
             }
         })
     })
@@ -208,56 +195,18 @@ twoPlayer.addEventListener('click',function(event){
 
 resetBtn.addEventListener('click',function(){ 
     allBoxes.forEach(function(item){
-            item.textContent = '';
-            item.style.backgroundColor = '#bbd0e5';
+        item.textContent = '';
+        item.style.backgroundColor = '#bbd0e5';
     })
     turnInfoDOM.style.display = 'block';
     winMessage.style.display = 'none';
     palyerMoveCounter = 0;
     playerMarker = 'X';
     document.querySelector('body h3 span').textContent = 'X';
-    availableBox = [[1,1,1],[1,1,1],[1,1,1]];
+    availableBox = [1,1,1,1,1,1,1,1,1];
     computerMoveCounter = 0;
 })
 
 goHomeBtn.addEventListener('click',function(){ 
     location.reload();
 })
-
-
-// findAvailWinCombo = function(){
-//     fillFunc();
-//     for(var i = 0; i < filled.length; i++){
-//             for (k = 0; k < 3 ; k++){
-//                 if(filled[i] == avaiableWinCombos[j][k]){
-//                     storage.push(j);
-//                 }
-//             }
-//         }
-//     }
-//     console.log(" J value :" + storage);
-
-//     console.log("Avail win combo" + avaiableWinCombos);
-//}
-//var isWinPossible = function(char){    
-
-    // console.log("Combo " + storage)
-    // for(var i = 0; i < storage.length; i++ ){
-    //     console
-    // }
-    // for(var i = 0; i < storage.length; i++){
-    //     for(j = i+1; j< storage.length; j++){
-    //         if(storage[i] === storage[j]){
-    //             console.log("Better pick : " + winCombos[storage[j]]);
-    //             console.log("Space Available : " + availBoxToStr);
-    //             for( var i = 0; i < availBoxToStr.length; i++){
-    //                 if(availBoxToStr[i] == "1"){
-    //                     availIndexArray.push(i);
-    //                 }   
-    //             } 
-    //         }
-    //     }
-    // }
-    // console.log("avail index " + availIndexArray);
-  //  return false;
-//}
