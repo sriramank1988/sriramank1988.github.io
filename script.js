@@ -1,5 +1,5 @@
-var playerTurn = document.querySelector('body h3 span').textContent;
-var playerTurnDom = document.querySelector('.playerTurn')
+var playerMarker = document.querySelector('body h3 span').textContent;
+var turnInfoDOM = document.querySelector('.playerTurn')
 var winMessage = document.querySelector('.winMessage')
 var resetBtn = document.querySelector('.resetBtn');
 var goHomeBtn = document.querySelector('.goHomeBtn');
@@ -13,14 +13,14 @@ var compMsg = document.querySelector('.compMsg');
 var availableBox = [[1,1,1],[1,1,1],[1,1,1]];
 var availBoxToStr = availableBox.toString();
 var timerId = null;
-var scoreX = 0, scoreO = 0, counter = 0, easyCount = 0;
+var scoreX = 0, scoreO = 0, palyerMoveCounter = 0, computerMoveCounter = 0;
 var winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
 var avaiableWinCombos = winCombos;
 var oFilled = [];
 var xFilled = [];
 
 var updateScore = function(winningPlayerMarker){
-    if(playerTurnDom.style.display == 'none'){
+    if(turnInfoDOM.style.display == 'none'){
         if(winningPlayerMarker === 'X'){
             scoreX++;
             document.querySelector('.xScore span').textContent = scoreX;
@@ -37,7 +37,7 @@ var displayWinner = function(num1,num2,num3,str){ //It expects the winning posit
     allBoxes[num3].style.backgroundColor = 'green';
     winMessage.textContent = 'Winner is '+str+'!!!';
     winMessage.style.display = 'block';
-    playerTurnDom.style.display = 'none';
+    turnInfoDOM.style.display = 'none';
     compMsg.style.display = 'none';
     document.querySelector('button').disabled = false;
     updateScore(str)
@@ -64,13 +64,13 @@ var checkWinAndDisplay = function(){  //in the web dom checks if any player mark
             displayWinner(0,4,8,allBoxes[8].textContent);
     }else if(isSame(2,4,6)){
             displayWinner(2,4,6,allBoxes[6].textContent);
-    }else if(counter === 9 || easyCount  === 5){
+    }else if(palyerMoveCounter === 9 || computerMoveCounter  === 5){
         winMessage.textContent = 'Its a Tie mate!!!';
         winMessage.style.display = 'block';
-        playerTurnDom.style.display = 'none';
+        turnInfoDOM.style.display = 'none';
         compMsg.style.display = 'none';
         document.querySelector('button').disabled = false;
-        counter = 0;
+        palyerMoveCounter = 0;
     }
 }
 
@@ -82,20 +82,20 @@ var hideMenuAndLoadGameDom = function(){
 var loadTwoPlayer = function(){ //man vs man code, no logic involved, just change dom accordingly.
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
-            if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
-                if(playerTurn === 'X'){
-                    event.target.textContent = playerTurn;
+            if(event.target.textContent === "" && turnInfoDOM.style.display != 'none'){ //Ensure Text content is Empty and winner not found
+                if(playerMarker === 'X'){
+                    event.target.textContent = playerMarker;
                     event.target.style.backgroundColor = 'mistyrose';
-                    playerTurn = 'O';
+                    playerMarker = 'O';
                     document.querySelector('body h3 span').textContent = 'O';
-                    counter++;
+                    palyerMoveCounter++;
                 }
                 else{
-                    event.target.textContent = playerTurn;
+                    event.target.textContent = playerMarker;
                     event.target.style.backgroundColor = 'lightblue';
-                    playerTurn = 'X';
+                    playerMarker = 'X';
                     document.querySelector('body h3 span').textContent = 'X';
-                    counter++;
+                    palyerMoveCounter++;
                 }
                 checkWinAndDisplay();            
             }
@@ -111,11 +111,11 @@ var pickEasy = function(){ //picks a random postion which is still avaiable and 
         document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").textContent = 'O';
         document.querySelector("[data-row=\""+ randCol + "\"][data-col=\""+ randRow + "\"]").style.backgroundColor = 'lightblue';
         availableBox[randCol][randRow] = 'O';
-        playerTurnDom.style.display = 'block';
+        turnInfoDOM.style.display = 'block';
         compMsg.style.display = 'none';
         checkWinAndDisplay();
     }else{
-        if(easyCount < 5){
+        if(computerMoveCounter < 5){
         pickEasy();
         }
     }
@@ -127,10 +127,10 @@ var playerMoves = function(event){
     var col = Number(event.target.getAttribute('data-col'));
     var row = Number(event.target.getAttribute('data-row'));
     availableBox[row][col] = 'X';
-    event.target.textContent = playerTurn;
+    event.target.textContent = playerMarker;
     event.target.style.backgroundColor = 'mistyrose';
-    easyCount++;
-    playerTurnDom.style.display = 'none';
+    computerMoveCounter++;
+    turnInfoDOM.style.display = 'none';
     compMsg.style.display = 'block';
     document.querySelector('button').disabled = true;
                                 
@@ -138,11 +138,11 @@ var playerMoves = function(event){
 var loadEasyMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
-            if(event.target.textContent === "" && playerTurnDom.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
+            if(event.target.textContent === "" && turnInfoDOM.style.display != 'none' && timerId == null){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
                 checkWinAndDisplay();
                 if(winMessage.style.display != 'block'){
-                    timerId = setTimeout(pickEasy, easyCount*1000);                    
+                    timerId = setTimeout(pickEasy, computerMoveCounter*1000);                    
                 }
             }
         })
@@ -170,18 +170,18 @@ var fillFunc = function(){
 var whoCanWin = function(){
     // console.log("Owin called")
     // for(var i = 0; i <)
-    // var counter = 0 ;    
+    // var palyerMoveCounter = 0 ;    
 }
 var loadDifficultMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
-            if(event.target.textContent === "" && playerTurnDom.style.display != 'none'){ //Ensure Text content is Empty and winner not found
+            if(event.target.textContent === "" && turnInfoDOM.style.display != 'none'){ //Ensure Text content is Empty and winner not found
                 playerMoves(event);
                 checkWinAndDisplay();
                 whoCanWin();
                 if(winMessage.style.display != 'block'){
                     pickEasy();                    
-                    console.log("Easy count : " + easyCount);
+                    console.log("Easy count : " + computerMoveCounter);
                     availBoxToStr = availableBox.toString().split(",");
                     console.log(availBoxToStr);
                 }
@@ -211,13 +211,13 @@ resetBtn.addEventListener('click',function(){ // reset button event listener
             item.textContent = '';
             item.style.backgroundColor = '#bbd0e5';
     })
-    playerTurnDom.style.display = 'block';
+    turnInfoDOM.style.display = 'block';
     winMessage.style.display = 'none';
-    counter = 0;
-    playerTurn = 'X';
+    palyerMoveCounter = 0;
+    playerMarker = 'X';
     document.querySelector('body h3 span').textContent = 'X';
     availableBox = [[1,1,1],[1,1,1],[1,1,1]];
-    easyCount = 0;
+    computerMoveCounter = 0;
 })
 goHomeBtn.addEventListener('click',function(){ //Go home event listener button.
     location.reload();
