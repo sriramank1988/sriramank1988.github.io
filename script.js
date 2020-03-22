@@ -269,6 +269,10 @@ resetBtn.addEventListener('click',function(){
     document.querySelector('body h3 span').textContent = 'X';
     availableBox = [1,1,1,1,1,1,1,1,1];
     computerMoveCounter = 0;
+    availableIndexPosition = [0,1,2,3,4,5,6,7,8];
+    oFilled = [];
+    xFilled = [];
+    
 })
 
 goHomeBtn.addEventListener('click',function(){ 
