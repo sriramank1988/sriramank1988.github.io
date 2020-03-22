@@ -104,17 +104,21 @@ var loadTwoPlayer = function(){
     })
 }
 
+var computerMove = function(index){
+    document.querySelector("[data-index=\""+ index + "\"]").textContent = 'O';
+    document.querySelector("[data-index=\""+ index + "\"]").style.backgroundColor = 'lightblue';
+    availableBox[index] = "O";
+    oFilled.push(index);
+    availableIndexPosition.splice(availableIndexPosition.indexOf(index),1);
+    turnInfoDOM.style.display = 'block';
+    compMsg.style.display = 'none';
+    checkWinAndDisplay();
+}
+
 var pickEasy = function(){
     var randIndex = Math.floor(Math.random()*9);
     if(availableBox[randIndex] == "1"){
-        document.querySelector("[data-index=\""+ randIndex + "\"]").textContent = 'O';
-        document.querySelector("[data-index=\""+ randIndex + "\"]").style.backgroundColor = 'lightblue';
-        availableBox[randIndex] = "O";
-        oFilled.push(randIndex);
-        availableIndexPosition.splice(availableIndexPosition.indexOf(randIndex),1);
-        turnInfoDOM.style.display = 'block';
-        compMsg.style.display = 'none';
-        checkWinAndDisplay();
+        computerMove(randIndex)
     }else{
         if(computerMoveCounter < 5){
         pickEasy();
@@ -153,25 +157,85 @@ var loadEasyMode = function(){
     })
 }
 
-
-var whoCanWin = function(){
-      
+var availableWinCombos = function(markerFilledArray){
+    let avaialbleCombo = []
+    let availableIndexAndMarkerFilled = availableIndexPosition.concat(markerFilledArray)
+    winCombos.forEach((combo)=>{
+        let count = 0
+        availableIndexAndMarkerFilled.forEach((item) =>{
+            if(combo.includes(item)){
+                count++;
+                if(count === 3)
+                {
+                    avaialbleCombo.push(combo)
+                }
+            }
+        })
+    })
+    return avaialbleCombo.length == 0 ? null : avaialbleCombo;
 }
+
+var nextPossibleWinCombo = function(markerFilledArray){
+    let nextWinCombos = []
+    winCombos.forEach((combo)=>{
+        let count = 0
+        markerFilledArray.forEach((item) =>{
+            if(combo.includes(item)){
+                count++;
+                if(count === 2)
+                {
+                    nextWinCombos.push(combo)
+                }
+            }
+        })
+    })
+    let winposition = []
+    if(nextWinCombos.length !== 0){
+        nextWinCombos.forEach((combo) =>{
+            let returnValue = combo.filter(item => availableIndexPosition.includes(item))
+            if(returnValue.length !== 0){
+                winposition.push(returnValue)
+            }
+        })
+    } 
+    return winposition.length == 0 ? false : winposition[0];
+}
+
+var isCentreSpotFree = function(){
+    return availableIndexPosition.includes(4)
+
+}
+
+var getMeTheBestIndexPosition = function(){
+
+    let winIndex = [], preventIndex = []
+    winIndex = nextPossibleWinCombo(oFilled)
+    preventIndex = nextPossibleWinCombo(xFilled)
+    if(winIndex){
+        return winIndex[0];
+    }else if(preventIndex){
+        return preventIndex[0];
+    }else if(isCentreSpotFree()){
+        return 4;
+    }else{
+        return false;
+    }
+}
+
 var loadDifficultMode = function(){
     allBoxes.forEach(function(item){
         item.addEventListener('click',function(event){
             if(event.target.textContent === "" && turnInfoDOM.style.display != 'none'){ 
                 playerMoves(event);
                 checkWinAndDisplay();
-                console.log("X filled : " + xFilled)
-                console.log("Avaialble spots " + availableBox)
-                console.log(availableIndexPosition)
-                whoCanWin();
                 if(winMessage.style.display != 'block'){
-                    pickEasy();                    
-                    console.log("O filled : " + oFilled)
-                    console.log("Avaialble spots " + availableBox)
-                    console.log(availableIndexPosition)
+                    let bestIndex = getMeTheBestIndexPosition()
+                    if(bestIndex){
+                        computerMove(bestIndex);
+                    }
+                    else{
+                        pickEasy();  
+                    }                   
                 }
             }
         })
