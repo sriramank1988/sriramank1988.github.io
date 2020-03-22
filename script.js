@@ -104,12 +104,12 @@ var loadTwoPlayer = function(){
     })
 }
 
-var computerMove = function(index){
-    document.querySelector("[data-index=\""+ index + "\"]").textContent = 'O';
-    document.querySelector("[data-index=\""+ index + "\"]").style.backgroundColor = 'lightblue';
-    availableBox[index] = "O";
-    oFilled.push(index);
-    availableIndexPosition.splice(availableIndexPosition.indexOf(index),1);
+var computerMove = function(computerMoveIndex){
+    document.querySelector("[data-index=\""+ computerMoveIndex + "\"]").textContent = 'O';
+    document.querySelector("[data-index=\""+ computerMoveIndex + "\"]").style.backgroundColor = 'lightblue';
+    availableBox[computerMoveIndex] = "O";
+    oFilled.push(computerMoveIndex);
+    availableIndexPosition.splice(availableIndexPosition.indexOf(computerMoveIndex),1);
     turnInfoDOM.style.display = 'block';
     compMsg.style.display = 'none';
     checkWinAndDisplay();
@@ -194,11 +194,11 @@ var nextPossibleWinCombo = function(markerFilledArray){
         nextWinCombos.forEach((combo) =>{
             let returnValue = combo.filter(item => availableIndexPosition.includes(item))
             if(returnValue.length !== 0){
-                winposition.push(returnValue)
+                winposition.push(returnValue[0])
             }
         })
     } 
-    return winposition.length == 0 ? false : winposition[0];
+    return winposition.length == 0 ? false : winposition;
 }
 
 var isCentreSpotFree = function(){
@@ -212,8 +212,10 @@ var getMeTheBestIndexPosition = function(){
     winIndex = nextPossibleWinCombo(oFilled)
     preventIndex = nextPossibleWinCombo(xFilled)
     if(winIndex){
+        console.log("win index found")
         return winIndex[0];
     }else if(preventIndex){
+        console.log("prevent index found")
         return preventIndex[0];
     }else if(isCentreSpotFree()){
         return 4;
