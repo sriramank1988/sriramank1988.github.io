@@ -194,6 +194,7 @@ var nextPossibleWinCombo = function(markerFilledArray){
         nextWinCombos.forEach((combo) =>{
             let returnValue = combo.filter(item => availableIndexPosition.includes(item))
             if(returnValue.length !== 0){
+                console.log(returnValue)
                 winposition.push(returnValue[0])
             }
         })
@@ -215,7 +216,7 @@ var getMeTheBestIndexPosition = function(){
         console.log("win index found")
         return winIndex[0];
     }else if(preventIndex){
-        console.log("prevent index found")
+        console.log("prevent index found" + preventIndex)
         return preventIndex[0];
     }else if(isCentreSpotFree()){
         return 4;
@@ -231,11 +232,12 @@ var loadDifficultMode = function(){
                 playerMoves(event);
                 checkWinAndDisplay();
                 if(winMessage.style.display != 'block'){
-                    let bestIndex = getMeTheBestIndexPosition()
-                    if(bestIndex){
+                    let bestIndex = getMeTheBestIndexPosition();
+                    if(bestIndex !== false){
+                        console.log("best index")
                         computerMove(bestIndex);
-                    }
-                    else{
+                    }else{
+                        console.log("easy pick")
                         pickEasy();  
                     }                   
                 }
