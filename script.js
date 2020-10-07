@@ -282,4 +282,3 @@ resetBtn.addEventListener('click',function(){
 goHomeBtn.addEventListener('click',function(){ 
     location.reload();
 })
-//add a comment
